@@ -14,13 +14,15 @@ app.listen(3000, function() {
 });
 
 //Global variables
-const homeStartingContent = ""
-const aboutContent = ""
-const contactContent = ""
+const homeStartingContent = "Home Page"
+const aboutContent = "About Page"
+const contactContent = "Contact Me"
 
 //Routes
 
-
+app.get("/", function(req, res){
+  res.render("home.ejs", {home_text:homeStartingContent});
+});
 
 
 
