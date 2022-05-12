@@ -1,0 +1,17 @@
+{
+  "name": "blog-site",
+  "version": "1.0.0",
+  "description": "A simple blog site project to work on Node.js and Express skills",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Corey Willinger",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "lodash": "^4.17.21"
+  }
+}
