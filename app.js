@@ -14,22 +14,33 @@ app.listen(3000, function() {
 });
 
 //Global variables
-const homeStartingContent = "Home Page"
-const aboutContent = "About Page"
-const contactContent = "Contact Me"
+const homeContent = "Home Page";
+const aboutContent = "About Page";
+const composeContent = "Compose message";
+const contactContent = "Contact Me";
+
 
 //Routes
-
 app.get("/", function(req, res){
-  res.render("home.ejs", {home_text:homeStartingContent});
+  res.render("home.ejs", {home_text:homeContent});
+});
+
+app.get("/about", function(req, res){
+  res.render("about.ejs", {about_text:aboutContent});
+});
+
+app.get("/compose", function(req, res){
+  res.render("compose.ejs");
+});
+
+app.post("/compose", function(req, res){
+  let post_title = req.body.post_title;
+  let post_body = req.body.post_body;
+  console.log(post_title);
+  console.log(post_body);
 });
 
 
-
-
-
-
-
-
-
-
+app.get("/contact", function(req, res){
+  res.render("contact.ejs", {contact_text:contactContent});
+});
