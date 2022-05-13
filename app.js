@@ -16,8 +16,8 @@ app.listen(3000, function() {
 });
 
 //Global variables
-const homeContent = "Home Page";
-const aboutContent = "About Page";
+const homeContent = "A collection of musings...";
+const aboutContent = "I'm a retired USAF Officer with plenty of time on my hands.  Why not create a blog site that no one will read.";
 const composeContent = "Compose message";
 const contactContent = "Contact Me";
 const posts = [];  //can modify a const array.
