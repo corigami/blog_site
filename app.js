@@ -1,19 +1,24 @@
 //jshint esversion:6
 
-//server configurations
+//npm modules
 const express = require("express");
 const bodyParser = require("body-parser");
 const _ = require("lodash");  //use lodash for utility goodness.
 const ejs = require("ejs");
-const app = express();
+const mongoose = require("mongoose");
 
+/* ---------------Express Configuration ------------*/
+const app = express();
+const PORT = process.env.PORT || 3000;
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-app.listen(3000, function() {
-  console.log("Server started on port 3000");
-});
+/* ---------------Database Configuration ------------*/
+const DB_PORT = 27017;
+const DB_URI = "mongodb://localhost:" + DB_PORT + "/blog";
+mongoose.connect(DB_URI);
+
 
 //Global variables
 const homeContent = "A collection of musings...";
@@ -23,37 +28,55 @@ const contactContent = "Contact Me";
 const posts = [];  //can modify a const array.
 
 
-//Routes
-app.get("/", function(req, res){
-  res.render("home.ejs", {home_text:homeContent, posts:posts});
+
+app.listen(PORT, function () {
+  console.log("Server started on port " + PORT);
 });
 
-app.get("/about", function(req, res){
-  res.render("about.ejs", {about_text:aboutContent});
+
+
+//create Blog schema and model
+const postSchema = new mongoose.Schema({ title: String, body: String });
+const Post = mongoose.model("Post", postSchema);
+
+/* --------------------Routes ---------------*/
+app.get("/", function (req, res) {
+
+  Post.find({}, function (err, data) {
+    res.render("home", { home_text: homeContent, posts: data });
+  });
+
 });
 
-app.get("/compose", function(req, res){
+app.get("/about", function (req, res) {
+  res.render("about.ejs", { about_text: aboutContent });
+});
+
+app.get("/compose", function (req, res) {
   res.render("compose.ejs");
 });
 
-app.post("/compose", function(req, res){
-  const post = {
-    title: req.body.post_title,
-    body:req.body.post_body
-  }
-  posts.push(post);
-  res.redirect("/");
+app.post("/compose", function (req, res) {
+  //get date from form
+  const post_title = req.body.post_title;
+  const post_body = req.body.post_body;
+
+  //create new mongo document using mongoose model
+  const post = new Post({ title: post_title, body: post_body });
+  post.save().then(res.redirect("/"));
 });
 
-app.get("/contact", function(req, res){
-  res.render("contact.ejs", {contact_text:contactContent});
+app.get("/contact", function (req, res) {
+  res.render("contact.ejs", { contact_text: contactContent });
 });
 
-app.get("/posts/:title", function(req, res){
-posts.forEach(function(post){
-  if(_.lowerCase(post.title) === _.lowerCase(req.params.title)){
-    res.render("post.ejs", {post});
-  }
-});
-
+app.get("/posts/:_id", function (req, res) {
+  const ID = req.params._id
+  Post.findById(ID, function (err, post) {
+    if (!err) {
+      res.render("post.ejs", { post });
+    } else {
+      console.log(err);
+    }
+  });
 });
